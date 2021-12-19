@@ -1,0 +1,94 @@
+{
+  "main": {
+    "id": "dc22fc074e176aab",
+    "type": "split",
+    "children": [
+      {
+        "id": "a373b85d96348636",
+        "type": "leaf",
+        "state": {
+          "type": "markdown",
+          "state": {
+            "file": "Practice1.md",
+            "mode": "source"
+          }
+        }
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "de09fac01277f207",
+    "type": "split",
+    "children": [
+      {
+        "id": "c21b7ecd7764559c",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "bb7877bf0fb70141",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {}
+            }
+          },
+          {
+            "id": "9afba06d8c0c02de",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "2fabd197b58f897c",
+    "type": "split",
+    "children": [
+      {
+        "id": "abf459e9049c5087",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "d52c3130a32ec912",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Practice1.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "active": "a373b85d96348636",
+  "lastOpenFiles": [
+    "Practice1.md",
+    "무제노트.md"
+  ]
+}
