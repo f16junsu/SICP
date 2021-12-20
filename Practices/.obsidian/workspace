@@ -9,7 +9,7 @@
         "state": {
           "type": "markdown",
           "state": {
-            "file": "Practice1.md",
+            "file": "Exercise2.md",
             "mode": "source"
           }
         }
@@ -68,7 +68,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Practice1.md",
+                "file": "Exercise2.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -88,7 +88,7 @@
   },
   "active": "a373b85d96348636",
   "lastOpenFiles": [
-    "Practice1.md",
-    "무제노트.md"
+    "Exercise2.md",
+    "Exercise1.md"
   ]
 }

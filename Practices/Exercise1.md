@@ -1,6 +1,7 @@
-Practice 1
-----------
-### Practice 1.3
+
+# Exercise 1
+* * *
+### Exercise 1.3
  ```racket
 (define (fun x y z)
 	(cond
@@ -9,19 +10,19 @@ Practice 1
 		(else (+ (* y y) (* z z)))))
 ```
 
-### Practice 1.4   
+### Exercise 1.4   
 $a + |b|$ 
 	
-### Practice 1.5
+### Exercise 1.5
 * 인자 먼저 계산법(applicative order evaluation):   
 인자를 각각 먼저 eval하기 때문에 무한루프(함수 p)가 실행된다. 
 * 정의대로 계산법(normal-order evaluation):
 인자의 식들을 eval하지 않고 일단 함수에 적용시키기 때문에 0이 먼저 비교가 되어 0이 리턴된다. 
 	
-### Practice 1.6
+### Exercise 1.6
 special form if의 경우 predicate이 참이라면 then-clause만 eval하고 거짓이라면 else-clause를 eval하기 때문에 루프가 종결될 수 있지만, new-if의 경우 new-if에 인자를 적용시킬 때 각 인자들을 모두 eval한 후 적용시키기 때문에 무한하게 프로시저가 호출된다. 
 
-### Practice 1.7
+### Exercise 1.7
 ```racket
 (define (good-enough??? guess x)
 	(= (improve guess x) guess))
@@ -44,11 +45,11 @@ special form if의 경우 predicate이 참이라면 then-clause만 eval하고 �
 	(sqrt3-iter 1.0 x))
 ```
 
-### Practice 1.9
+### Exercise 1.9
 * 첫번째 : 되도는(recursive) 프로세스
 * 두번째 : 반복되는(iterative) 프로세스
 
-###  Practice 1.10
+###  Exercise 1.10
 ```racket
 (define (A x y)
     (cond ((= y 0) 0)
@@ -63,7 +64,7 @@ special form if의 경우 predicate이 참이라면 then-clause만 eval하고 �
 * $g(n)$ = if $n = 0$, $0$ else $2^n$
 * $h(n) = 2^{h(n - 1)}$, where $h(1) = 2$, $h(0) = 0$
 
-### Practice 1.11
+### Exercise 1.11
 * Recursive Process
 ```racket
 (define (fr n)
@@ -90,21 +91,21 @@ special form if의 경우 predicate이 참이라면 then-clause만 eval하고 �
         (+ (pascal (- row 1) (- col 1)) (pascal (- row 1) col))))
 ```
 
-### Practice 1.13
+### Exercise 1.13
 * 1
 	* 2번에서, $Fib(n) = \frac{(\phi^n - \psi^n)}{\sqrt{5}}$이므로, $Fib(n) - f(n) = -g(n) = -\frac{\psi^n}{\sqrt{5}}$인데, $|\psi| < 1$이므로 $|Fib(n) - f(n)| < 0.5$이고 따라서 $Fib(n)$은 $\frac{\phi^n}{\sqrt{5}}$에 가장 가까운 정수이다.
 * 2
 	* $f(n) = \frac{(\phi)^n}{\sqrt{5}}$, $g(n) = \frac{(\psi)^n}{\sqrt{5}}$ 이라하고, $f(n) + g(n) = h(n)$이라했을 때, $\phi$, $\psi$는 $x^2 - x - 1 = 0$의 두 근이므로 $n >= 2$에서 $h(n) = h(n - 1) + h(n - 2)$이다.   $h(0) = 0$, $h(1) = 1$이므로 $Fib(n) = h(n)$이다.
 
-### Practice 1.14
+### Exercise 1.14
 * Time Complexity: $\Theta(n^5)$
 * Space Complexity: $\Theta(n)$
 
-### Practice 1.15
+### Exercise 1.15
 a. 5 times   
 b. $\Theta(\log_3 a)$
 
-### Practice 1.16
+### Exercise 1.16
 ```racket
 (define (fast-expt-iter b n)
     (define (iter a k pow)
@@ -114,7 +115,7 @@ b. $\Theta(\log_3 a)$
     (iter 1 b n))
 ```
 
-### Practice 1.17
+### Exercise 1.17
 ```racket
 (define (fast-mul a b)
     (cond ((= b 0) 0)
@@ -122,7 +123,7 @@ b. $\Theta(\log_3 a)$
           (else (+ a (fast-mul a (- b 1))))))
 ```
 
-### Practice 1.18
+### Exercise 1.18
 ```racket
 (define (double x) (+ x x))
 (define (halve x) (/ x 2))
@@ -135,7 +136,7 @@ b. $\Theta(\log_3 a)$
     (iter 0 a b))
 ```
 
-### Practice 1.19
+### Exercise 1.19
 $a, b$에 대해 
 $T_{pq}(a) = a' = bq + aq + ap, T_{pq}(b) = b' = bp + aq$라 하면,
 
@@ -165,7 +166,7 @@ ${T_{pq}}^2(b) = b'p + a'q = b(p^2 + q^2) + a(q^2 + 2pq)$
                           (- count 1)))))
 ```
 
-### Practice 1.20
+### Exercise 1.20
 ```racket
 (gcd 206 40) ;with normal-order application
 (gcd 40 (remainder 206 40))
@@ -181,7 +182,7 @@ if (= (remainder (remainder 40 (remainder (206 40))) (remainder ((remainder 206 
 ```
 주석으로 v된 부분이 remainder가 실행되는 표시이며 총 18번 실행된다.
 
-### Practice 1.21
+### Exercise 1.21
 ```racket
 (define (smallest-divisor n) (find-divisor n 2))
 
@@ -195,7 +196,7 @@ if (= (remainder (remainder 40 (remainder (206 40))) (remainder ((remainder 206 
 * 1999 : 1999
 * 19999 : 7
 
-### Practice 1.22
+### Exercise 1.22
 % 주의사항: runtime 프로시저 대신 racket에서 current-inexact-milliseconds 사용. 자세한 내용은 racket docs에서.
 * (search-for-primes), (iter) source code
 ```racket
@@ -224,7 +225,7 @@ $10000000061 *** 0.346923828125$
 
 대체로 $\sqrt{n}$에 비례해서 연산시간이 증가함을 알 수 있다.
 
-### Practice 1.23
+### Exercise 1.23
 ```racket 
 (define (next n) (if (= n 2) 3 (+ n 2)))
 ```
@@ -264,7 +265,7 @@ $10000000061 *** 0.197998046875$
 
 즉 대략 2배 정도이지만 2배에는 조금 못미치는 성능을 낸다는 것을 알 수 있다. 이는 비록 input의 갯수는 줄었지만 next 프로시저에서 if연산을 하는 시간이 더 늘었기 때문으로 추정된다.(그럼에도 if 연산의 속도가 빨라서인지 거의 두배, 또는 그 이상의 성능을 내준다...)
 
-### Practice 1.24
+### Exercise 1.24
  ```racket
  ;To implement Fermat test
 (define (expmod base exp m) ;밑 지수 법
@@ -305,7 +306,7 @@ $1000000021 *** 0.047119140625$
 * 이 결과로부터 대략적으로 $n$에 대해 $\log n$에 비례하여 증가한다는 것을 확인할 수 있다.
 * 더 큰 숫자(예컨대 100자리가 넘어갈 정도의 숫자들)에 대해서는 로그보다는 좀더 증가폭이 크다고 한다. 이는 큰 숫자에 대한 primitive operations가 작은 숫자들과는 달리 constant하지 않기 때문이다.
 
-### Practice 1.25
+### Exercise 1.25
 ```racket
 (define (fast-expt a n)
     (cond ((= n 0) 1)
@@ -314,13 +315,13 @@ $1000000021 *** 0.047119140625$
 ```
 이 프로시저를 사용하면 알고리즘이 작동은 하지만 연산 시간이 굉장히 길어진다. 똑같은 프로시저임에도 고작 5자리 수 100043을 소수 판별 해내는데 5849.830810546875ms나 걸리는 것을 확인할 수 있었다. 이는 지수 계산 자체는 빠를지라도 나머지를 구하는 연산이 숫자가 커지면 굉장히 느려지기 때문이다.
 
-### Practice 1.26
+### Exercise 1.26
 ```racket
 (* (expmod base (/ exp 2) m) (expmod base (/ exp 2) m))
 ```
 코드에서만 봐도 알 수 있듯이 매번 expmod를 각각 호출하기 때문에 결국 지수 exp만큼 계산 단계를 거치게 된다.
 
-### Practice 1.27
+### Exercise 1.27
 ```racket
 (define (expmod base exp m)
     (cond ((= exp 0) 1)
@@ -335,7 +336,7 @@ $1000000021 *** 0.047119140625$
 ```
 위 코드로 소수를 테스트하면 반드시 그 소수보다 작은 모든 정수가 나온다. 그리고 대부분의 합성수들은 대부분의 수들이 빠져서 나오게 된다. 하지만 561같은 카마이클 수를 테스트해보면 마치 소수처럼 그 수보다 작은 모든 정수가 나온다.
 
-### Practice 1.28
+### Exercise 1.28
 ```racket
 (define (expmod base exp m);밑 지수 법
     (define (check k)
@@ -360,7 +361,7 @@ $1000000021 *** 0.047119140625$
 
 * 위 식이 성립하지 않으면 n은 높은 확률로 소수이다고 말할 수 있다. 이 이론적 배경을 살펴보면 우리의 코드에서 check를 사실 재귀를 돌다가 첫 홀수에 도달했을때 그 홀수까지만 체크해보면 된다는 것을 알 수 있지만(물론 check 프로시저의 수정도 필요) SICP에서는 애초에 정확한 밀러-라빈 판별법과는 조금 다르 컨셉을 이용했기 때문에 애초에 조금 다른 알고리즘이라고 볼 수 있다.
 
-### Practice 1.29
+### Exercise 1.29
 ```racket
 (define (sigma x_n start end)
     (if (> start end) 
@@ -381,7 +382,7 @@ $1000000021 *** 0.047119140625$
 (integral cube 0 1 1000); 1/4
 ```
 
-### Practice 1.30
+### Exercise 1.30
 ```racket
 (define (sum term a next b)
     (define (iter a result)
@@ -391,7 +392,7 @@ $1000000021 *** 0.047119140625$
     (iter (a 0)))
 ```
 
-### Practice 1.31
+### Exercise 1.31
 a. Recursive Process
 ```racket
 (define (product f a b)
@@ -424,7 +425,7 @@ b.Iterative Process
 (exact->inexact (* 4 (product_iter func 3 100000)));3.141608361592331 (당연하지만 똑같이 나온다)
 ```
 
-### Practice 1.32
+### Exercise 1.32
 a. Recursive Process
 ```racket
 (define (accumulate combiner null-value term a next b)
@@ -449,7 +450,7 @@ b. Iterative Process
     (iter a null-value))
 ```
 
-### Practice 1.33
+### Exercise 1.33
 * filtered-accumulate procedure
 ```racket
 (define (filtered-accumulate filter combiner null-value term a next b)
@@ -478,16 +479,16 @@ b.
     (filtered-accumulate relative-prime? * 1 give 1 inc n))
 ```
 
-### Practice 1.34
+### Exercise 1.34
 * (f f)는 결국 (f 2)를 호출하고 이는 다시 (2 2)를 호출하지만 2는 applicable한 인자가 아니기 때문에 오류가 발생한다.
 
-### Practice 1.35
+### Exercise 1.35
 * $x = 1 + \frac{1}{x}$의 근은 결국 $x^2 - x - 1 = 0$의 근과 같고 이는 결국 황금비이다.
 ```racket
 (fixed-point (lambda (x) (+ 1 (/ 1 x))) 1.0);1.6180327868852458
 ```
 
-### Practice 1.36
+### Exercise 1.36
 * Without average damping
 ```racket
 (define tolerance 0.00001)
@@ -560,7 +561,7 @@ $4.555483906560562$
 $4.5555268862194875$   
 $4.5555342036887705$   
 
-### Practice 1.37
+### Exercise 1.37
 * Iterative Process
 ```racket
 (define (cont-frac-iter n d k)
@@ -586,7 +587,7 @@ $4.5555342036887705$
     (recur 1))
 ```
 
-### Practice 1.38
+### Exercise 1.38
 ```racket
 (define euler-e 
     (+ 2 (cont-frac (lambda (x) 1.0)
@@ -597,7 +598,7 @@ $4.5555342036887705$
                 15))) ;2.718281828470584
 ```
 
-### Practice 1.39
+### Exercise 1.39
 ```racket
 (define (tan-cf x k)
     (cont-frac
@@ -606,14 +607,14 @@ $4.5555342036887705$
         k))
 ```
 
-### Practice 1.40
+### Exercise 1.40
 ```racket
 (define (cubic a b c)
     (define cube (lambda (i) (* i i i)))
     (lambda (x) (+ (cube x) (* a (sqr x)) (* b x) c)))
 ```
 
-### Practice 1.41
+### Exercise 1.41
 ```racket
 (define (double p) 
     (lambda (x) (p (p x))))
@@ -622,13 +623,13 @@ $4.5555342036887705$
 (((double (double double)) inc) 5) ;21
 ```
 
-### Practice 1.42
+### Exercise 1.42
 ```racket
 (define (compose f g)
     (lambda (x) (f (g x))))
 ```
 
-### Practice 1.43
+### Exercise 1.43
 ```racket
 (define (compose f g)
     (lambda (x) (f (g x))))
@@ -637,7 +638,7 @@ $4.5555342036887705$
     (if (= n 1) f (compose f (repeated f (- n 1)))))
 ```
 
-### Practice 1.44
+### Exercise 1.44
 ```racket
 (define (smooth f)
     (lambda (x) (/ (+ (f (- x dx)) (f x) (f (+ x dx))) 3.0)))
@@ -647,7 +648,7 @@ $4.5555342036887705$
     (repeated smooth n) f)
 ```
 
-### Practice 1.45
+### Exercise 1.45
 ```racket
 ;fixed-point
 (define (fixed-point f first-guess)
@@ -678,7 +679,7 @@ $4.5555342036887705$
 ```
 실험적으로, $n < 2^k$를 만족시키는 최소의 $k$번만큼 damping을 해줘야 한다는 것을 알 수 있었고 나는 이것을 획기적인 방법으로 증명했지만 여백이 작아 이곳에는 적지 못할 것 같다.
 
-### Practice 1.46
+### Exercise 1.46
 ```racket
 (define (iterative-improve improvingf good-enough?)
     (define (recur guess) 
