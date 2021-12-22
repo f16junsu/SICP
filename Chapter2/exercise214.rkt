@@ -2,9 +2,9 @@
 
 ;make-center-percent
 (define (make-center-percent c p)
-    (make-center-width c ((/ (* c p) 100))))
+    (make-center-width c (/ (* c p) 100.0)))
 (define (percent i)
-    (* (/ (width i) (center i)) 100))
+    (* (/ (width i) (center i)) 100.0))
 
 ;make-center-width
 (define (make-center-width c w)
@@ -19,12 +19,18 @@
 (define (lower-bound i) (car i))
 (define (upper-bound i) (cdr i))
 
+(define (print-interval i)
+    (display "(")
+    (display (lower-bound i))
+    (display ", ")
+    (display (upper-bound i))
+    (display ")")
+    (newline))
 (define (add-interval x y)
     (make-interval (+ (lower-bound x) (lower-bound y))
                    (+ (upper-bound x) (upper-bound y))))
 (define (sub-interval x y)
     (add-interval x (make-interval (- (upper-bound y)) (- (lower-bound y)))))
-
 (define (mul-interval x y)
     (define (check i)
         (let ((l (lower-bound i)) (u (upper-bound i)))
@@ -44,10 +50,13 @@
               ((and (= tx -1) (= ty 1)) (make-interval (* lx uy) (* ux ly)))
               ((and (= tx -1) (= ty 0)) (make-interval (* lx uy) (* lx ly)))
               ((and (= tx -1) (= ty -1)) (make-interval (* ux uy) (* lx ly))))))
-
 (define (div-interval x y)
     (let ((ly (lower-bound y)) (uy (upper-bound y)))
         (if (<= (* ly uy) 0)
             (error "Spans 0 in dividing interval")
             (mul-interval x (make-interval (/ 1.0 uy) (/ 1.0 ly))))))
 
+(define A (make-center-percent 10 0.1))
+(define B (make-center-percent 10 0.1))
+(print-interval (div-interval A A))
+(print-interval (div-interval A B))

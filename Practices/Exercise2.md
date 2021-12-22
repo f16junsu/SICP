@@ -169,3 +169,57 @@ Trivial
               ((and (= tx -1) (= ty -1)) (make-interval (* ux uy) (* lx ly))))))
 ```
 * 구간의 부호 종류를 1, 0, -1로 표시하여 총 9개의 케이스로 나누었다.
+
+### Exercise 2.12
+```racket
+(define (make-center-percent c p)
+    (make-center-width c ((/ (* c p) 100))))
+(define (percent i)
+    (* (/ (width i) (center i)) 100))
+```
+
+### Exercise 2.13
+두 구간을 $i_1 = (c_1-w_1, c_1+w_1)$, $i_2 = (c_2-w_2, c_2+w_2)$라 하고 각 오차퍼센트를 $p_1 = {\frac{w_1}{c_1}} \times {100}$, $p_2 = \frac{w_2}{c_1} \times 100$이라 하자. 곱했을 때의 구간은 $i_3 = (c_1c_2-w_1c_2-w_2c_1+w_1w_2, c_1c_2+w_1c_2+w_2c_1+w_1w_2)$이다. 이로부터 오차퍼센트를 구하면 
+$p_3 = \frac{w_1c_2+w_2c_1}{c_1c_2 + w_1w_2} \times 100$이다. 분자, 분모를 $c_1c_2$로 나눠주면 $p_3 = \frac{\frac{w_1}{c_1} + \frac{w_2}{c_2}}{1 + \frac{w_1w_2}{c_1c_2}} \times 100$이며 이를 정리하면 $p_3 = \frac{p_1 + p_2}{10^4 + p_1p_2}$이다. $10^4 \gg p_1p_2$이므로 어림잡아 $p_3 = \frac{p_1+p_2}{100}$이라고 할 수 있다.
+
+### Exercise 2.14~2.16
+대수적으로 성립하는 법칙들이 구간 산술에서는 성립하지 않는 것들이 많다. A / A와 A / B에 관한 것도 그렇다. 대수적으로  A / A는 1이지만 구간 산술에서는 그조차 범위가 생기게 된다. 단적으로 말해서, 구간 산술에서는 분배 법칙이나 교환 법칙 등이 성립하지 않기 때문에 대수적으로 같은 식이더라도 그 순서와 변수의 등장 개수에 따라 구간은 천차만별로 계산된다. 이 구간 산술 문제는 여러가지 연구를 통해 다양한 기법들이 개발되어 그 정확성을 높이고 있지만, 근본적으로는 해결 불가능한 문제로 보인다. 적어도 이 챕터에서 글쓴이는 이 수학적인 내용보다는 아무튼 어떤 데이터를 정의하는데 있어서 그 결과만 같다면 추상화를 할 수 있는 방법은 다양하다는 것을 얘기하고 있다.(경고대로, 이건 수학적으로 겁나 어려운 문제이다.)
+
+### Exercise 2.17
+```racket
+(define (last-pair l)
+    (if (null? (cdr l)) l (last-pair (cdr l))))
+```
+
+### Exercise 2.18
+```racket
+(define (append l1 l2)
+    (if (null? (cdr l1)) 
+        (cons (car l1) l2)
+        (cons (car l1) (append (cdr l1) l2))))
+        
+(define (reverse l)
+    (if (null? (cdr l)) l (append (reverse (cdr l)) (list (car l)))))
+```
+* 참고로 저 append 자리에 왜 cons를 쓰면 안되는 것인지는 다음 실행 결과를 보면 안다.
+```racket
+(cons (list 1 2) 3); '((1 2) 3)
+```
+
+### Exercise 2.19
+```racket
+(define no-more? null?)
+(define except-first-denomination cdr)
+(define first-denomination car)
+```
+* 의미 자체는 좀 덜 명확한 감이 있다. list 인자를 받는다는 것을 명시하는 것이 좋다.
+### Exercise 2.20
+```racket
+(define (same-parity . ls)
+    (define (recur filter l)
+        (cond ((null? l) '())
+              ((filter (car l)) (cons (car l) (recur filter (cdr l))))
+              (else (recur filter (cdr l)))))
+    (if (even? (car ls)) (recur even? ls) (recur odd? ls)))
+```
+* append와 다르게 cons는 첫번째 인자로써 리스트 앞에 붙일 원소를, 두번째 인자로써 첫번째 인자를 앞에 붙일 리스트가 건네야하기 때문에 재귀함수를 작성할때 주의해야 한다.
