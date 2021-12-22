@@ -1,0 +1,38 @@
+#lang racket
+
+(define (make-interval a b) (cons a b))
+(define (lower-bound i) (car i))
+(define (upper-bound i) (cdr i))
+
+(define (add-interval x y)
+    (make-interval (+ (lower-bound x) (lower-bound y))
+                   (+ (upper-bound x) (upper-bound y))))
+(define (sub-interval x y)
+    (add-interval x (make-interval (- (upper-bound y)) (- (lower-bound y)))))
+
+(define (mul-interval x y)
+    (define (check i)
+        (let ((l (lower-bound i)) (u (upper-bound i)))
+            (cond ((>= l 0) 1)
+                  ((< u 0) -1)
+                  (else 0))))
+    (let ((lx (lower-bound x)) (ux (upper-bound x))
+          (ly (lower-bound y)) (uy (upper-bound y))
+          (tx (check x)) (ty (check y)))
+        (cond ((and (= tx 1) (= ty 1)) (make-interval (* lx ly) (* ux uy)))
+              ((and (= tx 1) (= ty 0)) (make-interval (* ux ly) (* ux uy)))
+              ((and (= tx 1) (= ty -1)) (make-interval (* ux ly) (* lx uy)))
+              ((and (= tx 0) (= ty 1)) (make-interval (* lx uy) (* ux uy)))
+              ((and (= tx 0) (= ty 0)) (make-interval (min (* ux ly) (* lx uy))
+                                                      (max (* ux uy) (* lx ly))))
+              ((and (= tx 0) (= ty -1)) (make-interval (* ux ly) (* lx ly)))
+              ((and (= tx -1) (= ty 1)) (make-interval (* lx uy) (* ux ly)))
+              ((and (= tx -1) (= ty 0)) (make-interval (* lx uy) (* lx ly)))
+              ((and (= tx -1) (= ty -1)) (make-interval (* ux uy) (* lx ly))))))
+
+(define (div-interval x y)
+    (let ((ly (lower-bound y)) (uy (upper-bound y)))
+        (if (<= (* ly uy) 0)
+            (error "Spans 0 in dividing interval")
+            (mul-interval x (make-interval (/ 1.0 uy) (/ 1.0 ly))))))
+
