@@ -293,3 +293,75 @@ exercise 2.20에서 말했듯, 재귀나 반복문을 작성할 때 cons는 첫�
 (define l (list 1 (list 2 (list 3 (list 4 (list 5 (list 6 7))))))); == '(1 (2 (3 (4 (5 (6 7))))))
 (car (cdr (car (cdr (car (cdr (car (cdr (car (cdr (car (cdr l))))))))))))
 ```
+
+### Exercise 2.26
+```racket
+(define x (list 1 2 3))
+(define y (list 4 5 6))
+
+(append x y); '(1 2 3 4 5 6)
+(cons x y); '((1 2 3) 4 5 6)
+(list x y); '((1 2 3) (4 5 6))
+```
+
+### Exercise 2.27
+```racket
+(define (deep-reverse l)
+    (cond ((pair? l) (append (deep-reverse (cdr l)) (list (deep-reverse (car l)))))
+          (else l)))
+```
+
+### Exercise 2.28
+```racket
+(define (fringe l)
+    (cond ((null? l) l)
+          ((not (pair? l)) (list l))
+          (else (append (fringe (car l)) (fringe (cdr l))))))
+```
+* 2.27과 2.28은 리스트 관련 알고리즘을 짤 때 cons와 append의 차이를 잘 생각해볼 수 있는 좋은 문제인것 같다. 특히 트리에 관해 재귀적으로 알고리즘을 구현할 때 연습해볼만 하다.
+
+```racket
+(define (make-mobile left right) (list left right))
+(define (make-branch length structure) (list length structure))
+
+;a.
+(define (left-branch m) (car m))
+(define (right-branch m) (car (cdr m)))
+(define (branch-length b) (car b))
+(define (branch-structure b) (car (cdr b)))
+
+;b.
+(define (total-weight m)
+    (cond ((number? m) m);m이 사실 단일 branch의 weight일때
+          ((not (pair? (left-branch m))) (total-weight (branch-structure m)));사실 m이 branch일때
+          (else (+ (total-weight (left-branch m)) (total-weight (right-branch m))))))
+
+;c.
+(define (balanced? m)
+    (cond ((number? m) #t) ;m이 그냥 weight일때
+          ((not (pair? (left-branch m))) (balanced? (branch-structure m))) ;m이 사실 branch일때
+          ((and (balanced? (left-branch m)) (balanced? (right-branch m))) ;양쪽 팔들이 각각 balanced일때
+                (= (* (total-weight (left-branch m)) (branch-length (left-branch m)))
+                   (* (total-weight (right-branch m)) (branch-length (right-branch m)))))
+          (else #f)))
+		  
+;d. selector만 바꿔주면 된다.
+(define (left-branch m) (car m))
+(define (right-branch m) (cdr m))
+(define (branch-length b) (car b))
+(define (branch-structure b) (cdr b))
+```
+
+### Exercise 2.30
+```racket
+(define (square-tree l)
+    (map (lambda (sub)
+            (if (pair? sub)
+                (square-tree sub)
+                (sqr sub))) l))
+
+(define (square-tree2 l)
+    (cond ((null? l) l)
+          ((not (pair? l)) (sqr l))
+          (else (cons (square-tree2 (car l)) (square-tree2 (cdr l))))))
+```
