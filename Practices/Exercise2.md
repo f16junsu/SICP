@@ -365,3 +365,13 @@ exercise 2.20에서 말했듯, 재귀나 반복문을 작성할 때 cons는 첫�
           ((not (pair? l)) (sqr l))
           (else (cons (square-tree2 (car l)) (square-tree2 (cdr l))))))
 ```
+
+### Exercise 2.31
+```racket
+(define (tree-map pro t)
+    (map (lambda (sub)
+            (if (pair? sub)
+                (tree-map pro sub)
+                (pro sub))) t))
+```
+
