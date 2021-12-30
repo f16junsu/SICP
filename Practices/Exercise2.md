@@ -414,3 +414,69 @@ exercise 2.20에서 말했듯, 재귀나 반복문을 작성할 때 cons는 첫�
                                 ((pair? tr) (count-leaves tr)) 
                                 (else 1))) t)))
 ```
+
+### Exercise 2.36
+```racket
+(define (accumulate-n op init seqs)
+    (if (null? (car seqs))
+        '()
+        (cons (accumulate op init (map car seqs))
+              (accumulate-n op init (map cdr seqs)))))
+```
+
+### Exercise 2.37
+```racket
+;dot-product
+(define (dot-product v w)
+    (accumulate + 0 (map * v w)))
+;matrix-*-vector m v
+(define (matrix-*-vector m v)
+    (map (lambda (u) (dot-product u v)) m))
+;transpose
+(define (transpose mat)
+    (accumulate-n cons '() mat))
+;matrix-*-matrix
+(define (matrix-*-matrix m n)
+    (let ((cols (transpose n))) 
+         (map (lambda (v) 
+                (accumulate 
+                    (lambda (x y) (cons (dot-product v x) y)) 
+                        '() cols)) m)))
+```
+하지만 행렬의 곱과 행렬과 벡터의 곱의 관계를 잘 살펴보면 조금 더 간단하고 명확히 코드를 작성할 수 있다.
+```racket
+(define (matrix-*-matrix m n)
+    (let ((cols (transpose n)))
+        (map (lambda (v) (matrix-*-vector cols v)) m)))
+```
+
+### Exercise 2.38
+```racket
+(fold-right / 1 (list 1 2 3)); 3/2
+(fold-left / 1 (list 1 2 3)); 1/6
+(fold-right list '() (list 1 2 3)); '(1 (2 (3 ())))
+(fold-left list '() (list 1 2 3)); '(((() 1) 2) 3)
+```
+fold-right과 fold-left의 결과가 같기 위해서는 op가 결합법칙과 교환법칙을 만족시켜야한다. 이유는 계산하는 순서를 들여다보면 알 수 있다.
+
+### Exercise 2.39
+```racket
+(define (reverse-r sequence)
+    (fold-right (lambda (x y) (append y (list x))) '() sequence))
+
+(define (reverse-l sequence)
+    (fold-left (lambda (x y) (cons y x)) '() sequence))
+```
+
+### Exercise 2.40
+```racket
+(define (is-sum-prime? p) (prime? (+ (car p) (cadr p))))
+(define (unique-pairs n)
+    (flatmap 
+        (lambda (i) (map (lambda (j) (list i j)) (enumerate-interval 1 (- i 1))))
+        (enumerate-interval 1 n)))
+(define (make-pair-sum p) (list (car p) (cadr p) (+ (car p) (cadr p))))
+
+(define (prime-sum-pairs n)
+    (map make-pair-sum (filter is-sum-prime? (unique-pairs n))))
+```
