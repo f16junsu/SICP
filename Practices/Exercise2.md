@@ -375,3 +375,42 @@ exercise 2.20에서 말했듯, 재귀나 반복문을 작성할 때 cons는 첫�
                 (pro sub))) t))
 ```
 
+### Exercise 2.32
+```racket
+(define (subsets s)
+    (if (null? s)
+        (list '())
+        (let ((rest (subsets (cdr s))))
+            (append rest (map (lambda (l) (cons (car s) l)) rest)))))
+```
+* 재귀적인 알고리즘을 작성할 경우 이 알고리즘의 결과로 무엇이 나오는지 명시하는 것이 사고를 편하게 하는데 도움이 된다고 몇 번을 강조해도 지나치지 않은 것 같다. 어떤 집합의 부분집합은 한 원소를 포함하는 부분집합과 포함하지 않는 부분집합으로 나뉜다는 것을 이용한 알고리즘이다. 
+
+### Exercise 2.33
+```racket
+(define (map1 p sequence)
+    (accumulate (lambda (x y) (cons (p x) y)) '() sequence))
+
+(define (append1 seq1 seq2)
+    (accumulate cons seq2 seq1))
+
+(define (length1 sequence)
+    (accumulate (lambda (x y) (+ 1 y)) 0 sequence))
+```
+
+### Exercise 2.34
+```racket
+(define (horner-eval x coefficient-sequence)
+    (accumulate (lambda (this-coeff higher-terms)
+                    (+ this-coeff (* x higher-terms)))
+                0
+                coefficient-sequence))
+```
+
+### Exercise 2.35
+```racket
+(define (count-leaves t)
+    (accumulate + 0 
+        (map (lambda (tr) (cond ((null? tr) 0)
+                                ((pair? tr) (count-leaves tr)) 
+                                (else 1))) t)))
+```
