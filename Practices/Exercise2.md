@@ -480,3 +480,232 @@ fold-right과 fold-left의 결과가 같기 위해서는 op가 결합법칙과 �
 (define (prime-sum-pairs n)
     (map make-pair-sum (filter is-sum-prime? (unique-pairs n))))
 ```
+
+### Exercise 2.41
+```racket
+(define (unique-triples n)
+    (flatmap (lambda (i)
+                (flatmap (lambda (j) 
+                            (map (lambda (k) (list i j k)) 
+                                (enumerate-interval 1 (- j 1))))
+                    (enumerate-interval 1 (- i 1))))
+        (enumerate-interval 1 n)))
+
+(define (sum-is-s-triples n s)
+    (define (sum-s? t) (= (accumulate + 0 t) s))
+    (filter sum-s? (unique-triples n)))
+```
+* 귀찮아서 합이 s가 되는 경우가 없는 경우라던지 그런 특이케이스들은 넘기기로 한다.
+
+### Exercise 2.42
+```racket
+(define (queens board-size) ;coordination (row, column)
+    (define (queen-cols k)
+        (if (= k 0)
+            (list empty-board)
+            (filter (lambda (positions) (safe? k positions))
+                (flatmap
+                    (lambda (rest-of-queens) 
+                        (map (lambda (new-row) (adjoin-position new-row k rest-of-queens))
+                            (enumerate-interval 1 board-size)))
+                    (queen-cols (- k 1))))))
+    (queen-cols board-size))
+
+(define empty-board '())
+(define (adjoin-position r c li) (cons (list r c) li))
+(define (safe? k li)
+    (define (same-row? p t) (= (car p) (car t)))
+    (define (same-col? p t) (= (cadr p) (cadr t)))
+    (define (same-diag? p t) (= (abs (- (car p) (car t))) (abs (- (cadr p) (cadr t)))))
+    (define (attacked? p t) (or (same-row? p t) (same-col? p t) (same-diag? p t)))
+    (define (safe-iter t l)
+        (cond ((null? l) #t)
+              ((attacked? (car l) t) #f)
+              (else (safe-iter t (cdr l)))))
+    (safe-iter (car li) (cdr li))) ;새로 추가한 좌표만 다른 퀸들에 대해 확인
+```
+* 이 알고리즘의 경우 대칭을 고려하지 않고 모든 경우의 수가 나온다. 따라서 (queens 8)의 경우 총 92가지 경우가 나온다.
+
+### Exercise 2.43
+순서가 바뀐 경우 최하위 map에서 queen-cols를 호출하기 때문에 매 단계 n번의 호출이 일어난다.
+
+### Exercise 2.44
+```racket
+(define (up-split painter n)
+    (if (= n 0)
+        painter
+        (let ((smaller (up-split painter (- n 1))))
+            (below painter (beside smaller smaller)))))
+```
+만약 command line에서 코드를 실행시키고 있다면 이 그림언어 연습문제에서 코드를 확인하는데 좀 불편할 수 있다. 한가지 방법은 racket이라는 언어(scheme의 방언)의 IDE인 DrRacket에서 sicp 패키지를 install하여 실행하는 것이다. 코드 전문은 다음과 같다.
+```racket
+#lang racket
+;패키지 import
+(require (planet "sicp.ss" ("soegaard" "sicp.plt" 2 1)))
+
+(define (right-split painter n)
+    (if (= n 0)
+        painter
+        (let ((smaller (right-split painter (- n 1))))
+            (beside painter (below smaller smaller)))))
+
+(define (corner-split painter n)
+    (if (= n 0)
+        painter
+        (let ((up (up-split painter (- n 1))) (right (right-split painter (- n 1))))
+            (let ((top-left (beside up up))
+                  (bottom-right (below right right))
+                  (corner (corner-split painter (- n 1))))
+                (beside (below painter top-left)
+                        (below bottom-right corner))))))
+
+(define (up-split painter n)
+    (if (= n 0)
+        painter
+        (let ((smaller (up-split painter (- n 1))))
+            (below painter (beside smaller smaller)))))
+
+;test
+(paint (corner-split einstein 4))
+```
+
+### Exercise 2.45
+```racket
+(define (split proc1 proc2)
+    (lambda (painter n) 
+        (if (= n 0)
+            painter
+            (let ((smaller ((split proc1 proc2) painter (- n 1))))
+                (proc1 painter (proc2 smaller smaller))))))
+```
+
+### Exercise 2.46
+```racket
+(define (make-vect x y) (cons x y))
+(define (xcor-vect v) (car v))
+(define (ycor-vect v) (cdr v))
+
+(define (add-vect v1 v2)
+    (make-vect (+ (xcor-vect v1) (xcor-vect v2))
+               (+ (ycor-vect v1) (ycor-vect v2))))
+
+(define (sub-vect v1 v2)
+    (make-vect (- (xcor-vect v1) (xcor-vect v2))
+               (- (ycor-vect v1) (ycor-vect v2))))
+
+(define (scale-vect s v)
+    (make-vect (* s (xcor-vect v)) (* s (ycor-vect v))))
+```
+
+### Exercise 2.47
+```racket
+;make-frame1의 경우
+(define (origin-frame f) (car f))
+(define (edge1-frame f) (car (cdr f)))
+(define (edge2-frame f) (car (cdr (cdr f))))
+
+;make-frame2의 경우
+(define (origin-frame f) (car f))
+(define (edge1-frame f) (car (cdr f)))
+(define (edge2-frame f) (cdr (cdr f)))
+```
+
+### Exercise 2.48
+```racket
+(define (make-segment v1 v2) (cons v1 v2))
+(define (start-segment s) (car s))
+(define (end-segment s) (cdr s))
+```
+
+### Exercise 2.49
+```racket
+;a.
+(define outline-painter (segments->painter 
+                    (list (segment (vect 0.0 0.0) (vect 1.0 0.0))
+                          (segment (vect 1.0 0.0) (vect 1.0 1.0))
+                          (segment (vect 1.0 1.0) (vect 0.0 1.0))
+                          (segment (vect 0.0 1.0) (vect 0.0 0.0)))))
+;b.
+(define X-painter (segments->painter
+                    (list (segment (vect 0.0 0.0) (vect 1.0 1.0))
+                          (segment (vect 0.0 1.0) (vect 1.0 0.0)))))
+;c.
+(define diamond-painter (segments->painter 
+                            (list (segment (vect 0.0 0.5) (vect 0.5 1.0)) 
+                                (segment (vect 0.5 1.0) (vect 1.0 0.5)) 
+                                (segment (vect 1.0 0.5) (vect 0.5 0.0)) 
+                                (segment (vect 0.5 0.0) (vect 0.0 0.5))))) 
+;d.
+(define wave-painter (segments->painter
+                        (list
+                            (segment (vect .25 0) (vect .35 .5)) 
+                            (segment (vect .35 .5) (vect .3 .6)) 
+                            (segment (vect .3 .6) (vect .15 .4)) 
+                            (segment (vect .15 .4) (vect 0 .65)) 
+                            (segment (vect 0 .65) (vect 0 .85)) 
+                            (segment (vect 0 .85) (vect .15 .6)) 
+                            (segment (vect .15 .6) (vect .3 .65)) 
+                            (segment (vect .3 .65) (vect .4 .65)) 
+                            (segment (vect .4 .65) (vect .35 .85)) 
+                            (segment (vect .35 .85) (vect .4 1)) 
+                            (segment (vect .4 1) (vect .6 1)) 
+                            (segment (vect .6 1) (vect .65 .85)) 
+                            (segment (vect .65 .85) (vect .6 .65)) 
+                            (segment (vect .6 .65) (vect .75 .65)) 
+                            (segment (vect .75 .65) (vect 1 .35)) 
+                            (segment (vect 1 .35) (vect 1 .15)) 
+                            (segment (vect 1 .15) (vect .6 .45)) 
+                            (segment (vect .6 .45) (vect .75 0)) 
+                            (segment (vect .75 0) (vect .6 0)) 
+                            (segment (vect .6 0) (vect .5 .3)) 
+                            (segment (vect .5 .3) (vect .4 0)) 
+                            (segment (vect .4 0) (vect .25 0)))))
+```
+* segments->painter 프로시저를 직접 작성할 경우 draw-line이 없어서 프로시저를 사용할 수 없다. 대신 sicp 패키지에 segments->painter가 들어있기 때문에 이를 이용하였다. 이때 벡터는 vect프로시저로, 선분은 segment 프로시저로 만들 수 있다. wave 페인터는 도저히 만들 엄두가 안나 다른 답을 참고하였다...
+
+### Exercise 2.50
+```racket
+(define (flip-horiz painter) 
+   (transform-painter painter 
+                      (make-vect 1.0 0.0) 
+                      (make-vect 0.0 0.0) 
+                      (make-vect 1.0 1.0))) 
+  
+(define (rotate180 painter) 
+   (transform-painter painter 
+                      (make-vect 1.0 1.0) 
+                      (make-vect 0.0 1.0) 
+                      (make-vect 1.0 0.0))) 
+  
+(define (rotate270 painter) 
+   (transform-painter painter 
+                      (make-vect 0.0 1.0) 
+                      (make-vect 0.0 0.0) 
+                      (make-vect 1.0 1.0))) 
+```
+
+### Exercise 2.51
+```racket
+(define (below painter1 painter2)
+    (let ((split-point (make-vect 0.0 0.5)))
+        (let ((paint-bottom
+                (transform-painter
+                 painter1
+                 (make-vect 0.0 0.0)
+                 split-point
+                 (make-vect 1.0 0.0)))
+              (paint-top
+               (transform-painter
+                painter2
+                split-point
+                (make-vect 0.0 1.0)
+                (make-vect 1.0 0.5))))
+            (lambda (frame) (paint-bottom frame) (paint-top frame)))))
+			
+
+(define (below2 painter1 painter2)
+    (rotate270 (beside (rotate90 painter2) (rotate90 painter1))))
+```
+* 디버깅할 방법이 없지만 맞을 것이다...
+
+### Exercise 2.52
