@@ -767,3 +767,31 @@ fold-right과 fold-left의 결과가 같기 위해서는 op가 결합법칙과 �
 (define (multiplicand p) (if (= (length p) 3) (caddr p) (cons '* (cddr p))))
 ```
 * 식을 정리하는 것까지 바라지 않는다면 훨씬 더 간단히 할 수 있지만, 기본적으로 상수항들 정리와 0이 더해지는것, 1 또는 0이 곱해지는 것 등 이런 경우 식을 좀더 깔끔하게 정리하도록 accumulate와 filter를 활용했다.
+
+### Exercise 2.58
+* a.
+```racket
+(define (infix->prefix exp)
+    (if (pair? exp)
+        (list (cadr exp) (infix->prefix (car exp)) (infix->prefix (caddr exp)))
+        exp))
+```
+infix 형태로 포현한 대수식을 prefix 형태의 대수식으로 바꾸어주는 preprocessor 프로시저를 작성한다. 술어 고르개 짜맞추개는 이를 활용하여 작성하면 된다.
+
+* b.
+```racket
+(define (infix->prefix2 exp) ;accepts both infix and prefix forms
+    (define (product-processor expre)
+        (define (iter result rest)
+            (cond ((null? rest) result)
+                  ((and (< 2 (length rest)) (eq? '* (cadr rest))) 
+                        (iter result (cons (list '* (infix->prefix2 (car rest)) (infix->prefix2 (caddr rest))) 
+                                        (cdddr rest))))
+                  (else (iter (append result (list (infix->prefix2 (car rest)))) (cdr rest)))))
+        (iter '() expre))
+    (cond ((not (pair? exp)) exp) ;if a simple symbol or number or an operator
+          ((or (eq? (car exp) '+) (eq? (car exp) '*)) exp) ;if prefix form expression
+          (else (let ((product-processed (product-processor exp)))
+                    (cons '+ (filter (lambda (x) (not (eq? x '+))) product-processed))))))
+```
+* 좀더 고급스런 preprocessor 프로시저이다. 인자로는 infix형태 prefix형태 둘다 받으며 infix형태가 들어온다면 prefix형태로 변환하여 반환하고 prefix형태가 들어올 경우 그대로 반환한다. product-processor는 expre를 받아 이를 먼저 곱셈 부분들만 prefix형태로 변환시키는 프로시저이다. iter는 그 내부 프로시저로써 left-fold순서로 리스트를 처리해간다. \* 를 발견할 때마다 두 operand와 operator를 prefix 형태로 묶는 식인 것이다.(즉 이 프로시저의 경우 곱셈일 때는 항상 인자가 두개인 형태밖에 만들어지지 않는다.) 이 프로시저를 이용해 product를 먼저 process한 후 나머지 +들을 process하는 것이다. preprocessor 본체에서는 만약 받아온 exp가 단일 문자나 숫자, 연산자이면 그대로 반환하고, 이미 prefix형태라면 그대로 반환, 그 이외의 경우에는 +로만 묶여있는 형태일테니 filter로 거른뒤 한번에 + prefix를 달아주는 식이다.
