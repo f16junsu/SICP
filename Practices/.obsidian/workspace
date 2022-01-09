@@ -4,13 +4,13 @@
     "type": "split",
     "children": [
       {
-        "id": "f83611ac552a0b5d",
+        "id": "b73f519e7516d597",
         "type": "leaf",
         "state": {
           "type": "markdown",
           "state": {
             "file": "Exercise2.md",
-            "mode": "source"
+            "mode": "preview"
           }
         }
       }
@@ -86,7 +86,7 @@
     "width": 300,
     "collapsed": true
   },
-  "active": "f83611ac552a0b5d",
+  "active": "b73f519e7516d597",
   "lastOpenFiles": [
     "Exercise2.md",
     "Exercise1.md"

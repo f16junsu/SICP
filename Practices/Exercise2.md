@@ -708,4 +708,62 @@ fold-right과 fold-left의 결과가 같기 위해서는 op가 결합법칙과 �
 ```
 * 디버깅할 방법이 없지만 맞을 것이다...
 
-### Exercise 2.52
+### Exercise 2.54
+```racket
+(define (equal? v1 v2)
+    (cond ((eq? v1 v2) #t)
+          ((and (pair? v1) (pair? v2)) (and (equal? (car v1) (car v2)) (equal? (cdr v1) (cdr v2))))
+          (else #f)))
+```
+* 여러가지 답을 살펴봤는데 nil인 케이스를 꼭 검사해줘야하는지 헷갈린다. 이렇게 작성해도 모든 케이스는 통과하는 것 같고 통과하지 않는 corner case도 못 발견하겠다.
+
+### Exercise 2.55
+사실 'abracadabra는 (quote abracadabra)랑 같기 때문에 이를 또다시 인용하면 (quote (quote abracadabra))인 것이다. 따라서 car하는 대상은 (quote abracadabra)라는 list이고 따라서 quote가 출력된다.
+
+### Exercise 2.56
+```racket
+(define (deriv exp var)
+    (cond ((number? exp) 0)
+          ((variable? exp) (if (same-variable? exp var) 1 0))
+          ((sum? exp) (make-sum (deriv (addend exp) var) (deriv (augend exp) var)))
+          ((product? exp) (make-sum 
+                            (make-product (multiplier exp) (deriv (multiplicand exp) var))
+                            (make-product (deriv (multiplier exp) var) (multiplicand exp))))
+          ((exponentiation? exp) (make-product (exponent exp)
+                                    (make-product (make-exponentiation (base exp) (- (exponent exp) 1))
+                                        (deriv (base exp) var))))
+          (else (error "Unknown expression type: DERIV" exp))))
+		  
+;exponential
+(define (make-exponentiation exp n)
+    (cond ((=number? n 0) 1)
+          ((=number? n 1) exp)
+          ((=number? exp 0) 0)
+          (else (list '** exp n))))
+(define (base exp) (cadr exp))
+(define (exponent exp) (caddr exp))
+(define (exponentiation? exp) (and (pair? exp) (eq? (car exp) '**)))
+```
+
+### Exercise 2.57
+```racket
+(define (make-sum . l) ;l consists of at least two elements
+    (let ((num-sum (accumulate (lambda (x y) (if (number? x) (+ x y) y)) 0 l)) ;숫자들만 모두 더한 것
+          (filtered-list (filter (lambda (x) (not (number? x))) l))) ;숫자들을 제외한 리스트
+        (cond ((null? filtered-list) num-sum)
+              ((= 0 num-sum) (if (= (length filtered-list) 1) (car filtered-list) (cons '+ filtered-list)))
+              (else (append (list '+ num-sum) filtered-list)))))
+(define (make-product . l) 
+    (let ((num-prodt (accumulate (lambda (x y) (if (number? x) (* x y) y)) 1 l))
+          (filtered-list (filter (lambda (x) (not (number? x))) l)))
+        (cond ((null? filtered-list) num-prodt)
+              ((= 0 num-prodt) 0)
+              ((= 1 num-prodt) (if (= (length filtered-list) 1) (car filtered-list) (cons '* filtered-list)))
+              (else (append (list '* num-prodt) filtered-list)))))
+			  
+(define (addend s) (cadr s))
+(define (augend s) (if (= (length s) 3) (caddr s) (cons '+ (cddr s))))
+(define (multiplier p) (cadr p))
+(define (multiplicand p) (if (= (length p) 3) (caddr p) (cons '* (cddr p))))
+```
+* 식을 정리하는 것까지 바라지 않는다면 훨씬 더 간단히 할 수 있지만, 기본적으로 상수항들 정리와 0이 더해지는것, 1 또는 0이 곱해지는 것 등 이런 경우 식을 좀더 깔끔하게 정리하도록 accumulate와 filter를 활용했다.
