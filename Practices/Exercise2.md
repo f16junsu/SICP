@@ -795,3 +795,58 @@ infix 형태로 포현한 대수식을 prefix 형태의 대수식으로 바꾸�
                     (cons '+ (filter (lambda (x) (not (eq? x '+))) product-processed))))))
 ```
 * 좀더 고급스런 preprocessor 프로시저이다. 인자로는 infix형태 prefix형태 둘다 받으며 infix형태가 들어온다면 prefix형태로 변환하여 반환하고 prefix형태가 들어올 경우 그대로 반환한다. product-processor는 expre를 받아 이를 먼저 곱셈 부분들만 prefix형태로 변환시키는 프로시저이다. iter는 그 내부 프로시저로써 left-fold순서로 리스트를 처리해간다. \* 를 발견할 때마다 두 operand와 operator를 prefix 형태로 묶는 식인 것이다.(즉 이 프로시저의 경우 곱셈일 때는 항상 인자가 두개인 형태밖에 만들어지지 않는다.) 이 프로시저를 이용해 product를 먼저 process한 후 나머지 +들을 process하는 것이다. preprocessor 본체에서는 만약 받아온 exp가 단일 문자나 숫자, 연산자이면 그대로 반환하고, 이미 prefix형태라면 그대로 반환, 그 이외의 경우에는 +로만 묶여있는 형태일테니 filter로 거른뒤 한번에 + prefix를 달아주는 식이다.
+
+### Exercise 2.59
+```racket
+(define (union-set set1 set2)
+    (cond ((null? set1) set2)
+          ((null? set2) set1)
+          ((element-of-set? (car set1) set2) (union-set (cdr set1) set2))
+          (else (cons (car set1) (union-set (cdr set1) set2)))))
+```
+
+### Exercise 2.60
+```racket
+(define (element-of-set? x set)
+    (cond ((null? set) #f)
+          ((equal? x (car set)) #t)
+          (else (element-of-set? x (cdr set)))))
+(define (adjoin-set x set) (cons x set))
+(define (intersection-set set1 set2)
+    (cond ((or (null? set1) (null? set2)) '())
+          ((element-of-set? (car set1) set2)
+                (cons (car set1) (intersection-set (cdr set1) set2)))
+          (else (intersection-set (cdr set1) set2))))
+(define (union-set set1 set2) (append set1 set2))
+```
+
+### Exercise 2.61
+```racket
+(define (adjoin-set x set)
+    (cond ((null? set) (cons x set))
+          ((< x (car set)) (cons x set))
+          ((= x (car set)) set)
+          (else (cons (car set) (adjoin-set x (cdr set))))))
+```
+
+### Exercise 2.62
+```racket
+(define (union-set set1 set2)
+    (cond ((null? set1) set2)
+          ((null? set2) set1)
+          (else
+            (let ((x1 (car set1)) (x2 (car set2)))
+                (cond ((= x1 x2) (cons x1 (union-set (cdr set1) (cdr set2))))
+                    ((< x1 x2) (cons x1 (union-set (cdr set1) set2)))
+                    ((< x2 x1) (cons x2 (union-set set1 (cdr set2)))))))))
+```
+* 아이디어는 intersection-set 프로시저와 유사하다.
+
+### Exercise 2.63
+a. 두 프로시저 모두 같은 결과를 내놓는다. 프로세스를 자세히 살펴보면 완전 같은 방식으로 작동한다는 것을 알 수 있다.
+b. 첫번째 프로시저의 경우 $\Theta(nlogn)$의 시간이, 두번째 프로시저의 경우 $\Theta(n)$의 시간이 걸린다는 것을 알 수 있다. 이는 첫 번째 프로시저에서 append가 $\Theta(n)$인 프로시저이기 때문이다.
+
+### Exercise 2.64
+a. 기본적인 원리는 리스트에 들어있는 원소들의 대략 절반을 떼다가 왼쪽 트리를 만들고, 남은 원소들 중에 가장 작은 수를 entry로, 그리고 남은 원소들로 오른쪽 트리를 만들어 전체 트리를 만드는 것이다. 이는 이미 정렬되어있는 리스트이기 때문에 가능한 것이다. let을 여러번 겹쳐쓰는 이유는 p.84에 나와있다.
+
+b. $T(n) = 2T(\frac{n}{2}) + k$(k는 상수)로부터 $T(n) = \Theta(n)$임을 알 수 있다.
