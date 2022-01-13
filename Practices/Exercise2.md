@@ -850,3 +850,24 @@ b. 첫번째 프로시저의 경우 $\Theta(nlogn)$의 시간이, 두번째 프�
 a. 기본적인 원리는 리스트에 들어있는 원소들의 대략 절반을 떼다가 왼쪽 트리를 만들고, 남은 원소들 중에 가장 작은 수를 entry로, 그리고 남은 원소들로 오른쪽 트리를 만들어 전체 트리를 만드는 것이다. 이는 이미 정렬되어있는 리스트이기 때문에 가능한 것이다. let을 여러번 겹쳐쓰는 이유는 p.84에 나와있다.
 
 b. $T(n) = 2T(\frac{n}{2}) + k$(k는 상수)로부터 $T(n) = \Theta(n)$임을 알 수 있다.
+
+### Exercise 2.66
+```racket
+;record
+(define (make-record-tree key value left right)
+    (list (list key value) left right))
+(define (key record) (caar record))
+(define (value record) (cadar record))
+(define (left-tree record) (cadr record))
+(define (right-tree record) (caddr record))
+
+;lookup
+(define (lookup given-key record)
+    (cond ((null? record) #f)
+          ((equal? given-key (key record)) (value record))
+          (else (let ((l-result (lookup given-key (left-tree record))))
+                  (if (eq? l-result #f) 
+                      (lookup given-key (right-tree record))
+                      l-result)))))
+```
+* 근데 tree 형태의 자료구조를 쓰는 경우 어떤 조건대로 좌우로 나뉘어있기 마련인데 문제에서 설명이 부족하여 무엇을 바라는지를 모르겠다. 일단 위 코드대로라면 사실 큰 이점을 모르겠다.
