@@ -871,3 +871,32 @@ b. $T(n) = 2T(\frac{n}{2}) + k$(k는 상수)로부터 $T(n) = \Theta(n)$임을 �
                       l-result)))))
 ```
 * 근데 tree 형태의 자료구조를 쓰는 경우 어떤 조건대로 좌우로 나뉘어있기 마련인데 문제에서 설명이 부족하여 무엇을 바라는지를 모르겠다. 일단 위 코드대로라면 사실 큰 이점을 모르겠다.
+* 뒤늦게 알았지만 \#f이외의 모든 값을 참으로 인식하기 때문에 위 코드처럼 굳이 let으로 한번 지정하고 eq?fh \#f인지 확인할 필요가 없다... 바로 if문에 집어넣으면 된다.
+
+### Exercise 2.67
+```racket
+(decode sample-message sample-tree);'(A D A B B C A)
+```
+
+### Exercise 2.68
+```racket
+(define (encode-symbol letter tree)
+    (define (iter current-tree)
+        (cond ((leaf? current-tree) '())
+              ((memq letter (symbols (left-branch current-tree)))
+                    (cons 0 (iter (left-branch current-tree))))
+              ((memq letter (symbols (right-branch current-tree)))
+                    (cons 1 (iter (right-branch current-tree))))
+              (else (error "NO SYMBOL IN THE TREE"))))
+    (iter tree))
+```
+
+### Exercise 2.69
+```racket
+(define (successive-merge ordered-set)
+    (if (null? (cdr ordered-set)) 
+        (car ordered-set)
+        (let ((merged (make-code-tree (car ordered-set) (cadr ordered-set)))
+              (rest-set (cddr ordered-set)))
+            (successive-merge (adjoin-set merged rest-set)))))
+```
