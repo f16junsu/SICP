@@ -900,3 +900,22 @@ b. $T(n) = 2T(\frac{n}{2}) + k$(k는 상수)로부터 $T(n) = \Theta(n)$임을 �
               (rest-set (cddr ordered-set)))
             (successive-merge (adjoin-set merged rest-set)))))
 ```
+
+### Exercise 2.70
+```racket
+(define tree-270 (generate-huffman-tree '((A 2) (GET 2) (SHA 3) (WAH 1) 
+                                          (BOOM 1) (JOB 2) (NA 16) (YIP 9))))
+(encode '(GET A JOB 
+          SHA NA NA NA NA NA NA NA NA 
+          GET A JOB 
+          SHA NA NA NA NA NA NA NA NA
+          WAH YIP YIP YIP YIP YIP YIP YIP YIP YIP
+          SHA BOOM) tree-270)
+;'(1 1 1 1 1 1 1 0 0 1 1 1 1 0 1 1 1 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 0 0 1 1 1 1 0 1 1 1 0 0 0 0 0 0 0 0 0 1 1 0 1 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 1 0 1 1 0 1 0)
+```
+* 허프만 인코딩 나무로 인코딩 했을때는 총 84비트가 필요하지만 이를 만약 fixed-length code로 인코딩한다면 3비트 x 36 = 108비트가 필요하다.
+
+### Exercise 2.71
+$1 + 2 + 2^2 + \cdots + 2^{n - 1} < 2^n$으로부터 자명하게 가장 빈번한 문자는 1개만큼, 적은애는 $n - 1$개만큼 사용해야 한다.
+
+### Exercise 2.72
